@@ -5,7 +5,7 @@ A small planning web app that turns a feature brief into user stories and engine
 ## What is done
 - Feature brief form (`goal`, `users`, `constraints`, template, optional risks/unknowns)
 - LLM-backed generation endpoint with safe fallback when key is missing
-- Editable and reorderable tasks (up/down reorder + group/status/priority updates)
+- Editable and reorderable tasks (drag-and-drop within section + group/status/priority updates)
 - Export as markdown or plain text (copy + file download)
 - Last 5 generated specs on home page
 - Status page for backend, database, and LLM checks
@@ -13,11 +13,12 @@ A small planning web app that turns a feature brief into user stories and engine
 
 ## What is not done
 - Authentication / multi-user separation
-- Drag-and-drop reorder (uses up/down controls)
+- Cross-section drag-and-drop (reorder is kept inside the same section)
 - Advanced task metadata (assignees, due dates)
 
 ## Tech stack
 - Next.js 16 (App Router) + TypeScript
+- Tailwind CSS (utility-first styling)
 - Prisma + PostgreSql
 - Google Gemini API
 

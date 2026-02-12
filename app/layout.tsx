@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { NavLinks } from "@/components/NavLinks";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -9,19 +10,19 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning>
-        <header className="site-header">
-          <div className="container header-row">
-            <a href="/" className="brand">
+      <body
+        suppressHydrationWarning
+        className="min-h-screen bg-[radial-gradient(circle_at_12%_-10%,#dfe3e8_0%,transparent_36%),radial-gradient(circle_at_90%_10%,#eceff3_0%,transparent_30%),linear-gradient(135deg,rgba(31,41,55,0.06),rgba(17,17,17,0.03))] bg-[#f3f4f6] text-zinc-900 antialiased"
+      >
+        <header className="sticky top-0 z-40 border-b border-zinc-300/80 bg-white/85 backdrop-blur">
+          <div className="mx-auto flex min-h-[62px] w-[min(1080px,94vw)] items-center justify-between">
+            <a href="/" className="text-base font-extrabold tracking-[0.2px] text-zinc-900 no-underline">
               Tasks Generator
             </a>
-            <nav className="header-nav">
-              <a href="/">Home</a>
-              <a href="/status">Status</a>
-            </nav>
+            <NavLinks />
           </div>
         </header>
-        <main className="container">{children}</main>
+        <main className="mx-auto w-[min(1080px,94vw)]">{children}</main>
       </body>
     </html>
   );

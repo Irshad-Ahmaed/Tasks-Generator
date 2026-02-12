@@ -23,10 +23,10 @@ export default async function HomePage() {
   }
 
   return (
-    <section className="grid" style={{ gap: 20, paddingTop: 20, paddingBottom: 30 }}>
-      <div className="panel hero-panel">
-        <h1 className="hero-title">Tasks Generator</h1>
-        <p className="muted hero-subtitle">
+    <section className="grid gap-5 pb-8 pt-5">
+      <div className="rounded-2xl border border-zinc-300 bg-[linear-gradient(120deg,rgba(231,234,239,0.92),rgba(255,255,255,0.98))] p-5 shadow-[0_16px_30px_rgba(17,17,17,0.08)]">
+        <h1 className="m-0 text-[clamp(1.8rem,3vw,2.4rem)] font-bold leading-[1.15]">Tasks Generator</h1>
+        <p className="mt-2.5 max-w-[700px] text-zinc-500">
           Turn rough ideas into implementation-ready plans with grouped tasks, quick edits, and clean exports.
         </p>
         <ol>
@@ -36,20 +36,24 @@ export default async function HomePage() {
         </ol>
       </div>
 
-      <div className="grid two">
+      <div className="grid gap-4 md:grid-cols-[2fr_1fr]">
         <FeatureForm />
 
-        <aside className="panel">
-          <h2 className="section-title">Last 5 Specs</h2>
-          {dbWarning && <p className="error">{dbWarning}</p>}
+        <aside className="rounded-2xl border border-zinc-300 bg-white p-5 shadow-[0_16px_30px_rgba(17,17,17,0.08)]">
+          <h2 className="mb-2.5 text-xl font-semibold">Last 5 Specs</h2>
+          {dbWarning && <p className="mt-2 text-red-700">{dbWarning}</p>}
 
-          {!dbWarning && specs.length === 0 && <p className="muted">No specs yet. Generate your first one.</p>}
+          {!dbWarning && specs.length === 0 && <p className="text-zinc-500">No specs yet. Generate your first one.</p>}
 
-          <div className="grid" style={{ gap: 8 }}>
+          <div className="grid gap-2">
             {specs.map((spec) => (
-              <Link key={spec.id} href={`/specs/${spec.id}`} className="task-row history-link">
+              <Link
+                key={spec.id}
+                href={`/specs/${spec.id}`}
+                className="block rounded-xl border border-zinc-300 bg-white p-3 no-underline transition hover:-translate-y-0.5 hover:border-zinc-400 hover:shadow-[0_10px_18px_rgba(17,17,17,0.08)]"
+              >
                 <strong>{spec.title}</strong>
-                <p className="muted" style={{ marginBottom: 0 }}>
+                <p className="mb-0 text-zinc-500">
                   {spec.templateType} - {new Date(spec.createdAt).toLocaleString()}
                 </p>
               </Link>

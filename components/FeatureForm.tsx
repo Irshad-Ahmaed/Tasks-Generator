@@ -55,15 +55,31 @@ export function FeatureForm({ disabled }: Props) {
   }
 
   return (
-    <form className="panel" onSubmit={onSubmit}>
-      <h2 className="section-title">1) Describe the feature idea</h2>
-      <p className="muted">Fill the brief, generate stories/tasks, then refine and export.</p>
+    <form
+      className="rounded-2xl border border-zinc-300 bg-white p-5 shadow-[0_16px_30px_rgba(17,17,17,0.08)]"
+      onSubmit={onSubmit}
+    >
+      <h2 className="mb-2.5 text-xl font-semibold">1) Describe the feature idea</h2>
+      <p className="text-zinc-500">Fill the brief, generate stories/tasks, then refine and export.</p>
 
-      <label htmlFor="title">Spec title</label>
-      <input id="title" name="title" placeholder="Example: Team Onboarding Assistant" required minLength={3} maxLength={120} />
+      <label htmlFor="title" className="mb-2 mt-4 block text-sm font-bold">Spec title</label>
+      <input
+        id="title"
+        name="title"
+        placeholder="Example: Team Onboarding Assistant"
+        required
+        minLength={3}
+        maxLength={120}
+        className="w-full rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-sm transition focus:border-zinc-500 focus:outline-none focus:ring-4 focus:ring-zinc-400/20"
+      />
 
-      <label htmlFor="templateType">Template</label>
-      <select id="templateType" name="templateType" defaultValue="web_app">
+      <label htmlFor="templateType" className="mb-2 mt-4 block text-sm font-bold">Template</label>
+      <select
+        id="templateType"
+        name="templateType"
+        defaultValue="web_app"
+        className="w-full cursor-pointer rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-sm transition hover:border-zinc-400 focus:border-zinc-500 focus:outline-none focus:ring-4 focus:ring-zinc-400/20"
+      >
         {templates.map((item) => (
           <option key={item.value} value={item.value}>
             {item.label}
@@ -71,25 +87,59 @@ export function FeatureForm({ disabled }: Props) {
         ))}
       </select>
 
-      <label htmlFor="goal">Goal</label>
-      <textarea id="goal" name="goal" minLength={10} maxLength={500} required placeholder="What is the outcome this feature should drive?" />
+      <label htmlFor="goal" className="mb-2 mt-4 block text-sm font-bold">Goal</label>
+      <textarea
+        id="goal"
+        name="goal"
+        minLength={10}
+        maxLength={500}
+        required
+        placeholder="What is the outcome this feature should drive?"
+        className="min-h-[110px] w-full resize-y rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-sm transition focus:border-zinc-500 focus:outline-none focus:ring-4 focus:ring-zinc-400/20"
+      />
 
-      <label htmlFor="users">Users</label>
-      <textarea id="users" name="users" minLength={5} maxLength={300} required placeholder="Who will use this and what are their needs?" />
+      <label htmlFor="users" className="mb-2 mt-4 block text-sm font-bold">Users</label>
+      <textarea
+        id="users"
+        name="users"
+        minLength={5}
+        maxLength={300}
+        required
+        placeholder="Who will use this and what are their needs?"
+        className="min-h-[110px] w-full resize-y rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-sm transition focus:border-zinc-500 focus:outline-none focus:ring-4 focus:ring-zinc-400/20"
+      />
 
-      <label htmlFor="constraints">Constraints</label>
-      <textarea id="constraints" name="constraints" minLength={5} maxLength={500} required placeholder="Technical, budget, timeline, or compliance constraints" />
+      <label htmlFor="constraints" className="mb-2 mt-4 block text-sm font-bold">Constraints</label>
+      <textarea
+        id="constraints"
+        name="constraints"
+        minLength={5}
+        maxLength={500}
+        required
+        placeholder="Technical, budget, timeline, or compliance constraints"
+        className="min-h-[110px] w-full resize-y rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-sm transition focus:border-zinc-500 focus:outline-none focus:ring-4 focus:ring-zinc-400/20"
+      />
 
-      <label htmlFor="riskUnknowns">Risks / Unknowns (optional)</label>
-      <textarea id="riskUnknowns" name="riskUnknowns" maxLength={500} placeholder="Anything unclear or risky so far" />
+      <label htmlFor="riskUnknowns" className="mb-2 mt-4 block text-sm font-bold">Risks / Unknowns (optional)</label>
+      <textarea
+        id="riskUnknowns"
+        name="riskUnknowns"
+        maxLength={500}
+        placeholder="Anything unclear or risky so far"
+        className="min-h-[110px] w-full resize-y rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-sm transition focus:border-zinc-500 focus:outline-none focus:ring-4 focus:ring-zinc-400/20"
+      />
 
-      <div className="row" style={{ marginTop: 12 }}>
-        <button type="submit" disabled={loading || disabled}>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <button
+          type="submit"
+          disabled={loading || disabled}
+          className="rounded-xl bg-zinc-800 px-4 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-zinc-950 hover:shadow-[0_10px_18px_rgba(17,17,17,0.2)] disabled:cursor-not-allowed disabled:opacity-60"
+        >
           {loading ? "Generating..." : "Generate Plan"}
         </button>
       </div>
 
-      {error && <p className="error">{error}</p>}
+      {error && <p className="mt-2 text-red-700">{error}</p>}
     </form>
   );
 }

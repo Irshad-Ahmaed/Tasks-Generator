@@ -1,24 +1,24 @@
 export default function GlobalLoading() {
   return (
-    <section className="grid" style={{ gap: 20, paddingTop: 20, paddingBottom: 30 }}>
-      <div className="panel">
-        <div className="skeleton-line title" style={{ width: "38%", height: 26, marginBottom: 14 }} />
-        <div className="skeleton-line body" style={{ width: "72%", height: 14, marginBottom: 8 }} />
-        <div className="skeleton-line body" style={{ width: "58%", height: 14 }} />
+    <section className="grid gap-5 pb-8 pt-5">
+      <div className="rounded-2xl border border-zinc-300 bg-white p-5 shadow-[0_16px_30px_rgba(17,17,17,0.08)]">
+        <div className="mb-3.5 h-[26px] w-[38%] animate-pulse rounded-lg bg-zinc-200" />
+        <div className="mb-2 h-3.5 w-[72%] animate-pulse rounded-lg bg-zinc-200" />
+        <div className="h-3.5 w-[58%] animate-pulse rounded-lg bg-zinc-200" />
       </div>
 
-      <div className="grid two">
-        <div className="skeleton-card">
-          <div className="skeleton-line title" />
-          <div className="skeleton-line body" style={{ marginBottom: 8 }} />
-          <div className="skeleton-line body" style={{ width: "92%", marginBottom: 8 }} />
-          <div className="skeleton-line body" style={{ width: "68%" }} />
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-2xl border border-zinc-300 bg-white p-4">
+          <div className="mb-2.5 h-4 w-[55%] animate-pulse rounded-lg bg-zinc-200" />
+          <div className="mb-2 h-3 w-[85%] animate-pulse rounded-lg bg-zinc-200" />
+          <div className="mb-2 h-3 w-[92%] animate-pulse rounded-lg bg-zinc-200" />
+          <div className="h-3 w-[68%] animate-pulse rounded-lg bg-zinc-200" />
         </div>
 
-        <div className="skeleton-card">
-          <div className="skeleton-line title" style={{ width: "46%" }} />
-          <div className="skeleton-line body" style={{ width: "84%", marginBottom: 8 }} />
-          <div className="skeleton-line body" style={{ width: "62%" }} />
+        <div className="rounded-2xl border border-zinc-300 bg-white p-4">
+          <div className="mb-2.5 h-4 w-[46%] animate-pulse rounded-lg bg-zinc-200" />
+          <div className="mb-2 h-3 w-[84%] animate-pulse rounded-lg bg-zinc-200" />
+          <div className="h-3 w-[62%] animate-pulse rounded-lg bg-zinc-200" />
         </div>
       </div>
     </section>

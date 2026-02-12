@@ -31,41 +31,41 @@ export default function StatusPage() {
   }, []);
 
   return (
-    <section className="grid" style={{ gap: 20, paddingTop: 20, paddingBottom: 30 }}>
-      <div className="panel">
-        <h1 className="hero-title" style={{ marginTop: 0, fontSize: "1.8rem" }}>System Status</h1>
-        <p className="muted">Live health check for backend, database, and LLM connection.</p>
+    <section className="grid gap-5 pb-8 pt-5">
+      <div className="rounded-2xl border border-zinc-300 bg-white p-5 shadow-[0_16px_30px_rgba(17,17,17,0.08)]">
+        <h1 className="mt-0 text-[1.8rem] font-bold leading-tight">System Status</h1>
+        <p className="text-zinc-500">Live health check for backend, database, and LLM connection.</p>
       </div>
 
-      {error && <p className="error">{error}</p>}
+      {error && <p className="mt-2 text-red-700">{error}</p>}
 
       {!status && !error && (
-        <div className="grid two">
+        <div className="grid gap-4 md:grid-cols-2">
           {[1, 2, 3, 4].map((item) => (
-            <div key={item} className="skeleton-card">
-              <div className="skeleton-line title" />
-              <div className="skeleton-line body" />
+            <div key={item} className="rounded-2xl border border-zinc-300 bg-white p-4">
+              <div className="mb-2.5 h-4 w-[55%] animate-pulse rounded-lg bg-zinc-200" />
+              <div className="h-3 w-[85%] animate-pulse rounded-lg bg-zinc-200" />
             </div>
           ))}
         </div>
       )}
 
       {status && (
-        <div className="grid two">
-          <div className="panel status-card">
-            <h2 className="section-title">Backend</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="relative overflow-hidden rounded-2xl border border-zinc-300 bg-white p-5 shadow-[0_16px_30px_rgba(17,17,17,0.08)] after:absolute after:inset-x-0 after:bottom-0 after:h-1 after:bg-zinc-500">
+            <h2 className="mb-2.5 text-xl font-semibold">Backend</h2>
             <p>{status.backend}</p>
           </div>
-          <div className="panel status-card">
-            <h2 className="section-title">Database</h2>
+          <div className="relative overflow-hidden rounded-2xl border border-zinc-300 bg-white p-5 shadow-[0_16px_30px_rgba(17,17,17,0.08)] after:absolute after:inset-x-0 after:bottom-0 after:h-1 after:bg-zinc-500">
+            <h2 className="mb-2.5 text-xl font-semibold">Database</h2>
             <p>{status.database}</p>
           </div>
-          <div className="panel status-card">
-            <h2 className="section-title">LLM</h2>
+          <div className="relative overflow-hidden rounded-2xl border border-zinc-300 bg-white p-5 shadow-[0_16px_30px_rgba(17,17,17,0.08)] after:absolute after:inset-x-0 after:bottom-0 after:h-1 after:bg-zinc-500">
+            <h2 className="mb-2.5 text-xl font-semibold">LLM</h2>
             <p>{status.llm}</p>
           </div>
-          <div className="panel status-card">
-            <h2 className="section-title">Checked At</h2>
+          <div className="relative overflow-hidden rounded-2xl border border-zinc-300 bg-white p-5 shadow-[0_16px_30px_rgba(17,17,17,0.08)] after:absolute after:inset-x-0 after:bottom-0 after:h-1 after:bg-zinc-500">
+            <h2 className="mb-2.5 text-xl font-semibold">Checked At</h2>
             <p>{new Date(status.timestamp).toLocaleString()}</p>
           </div>
         </div>
