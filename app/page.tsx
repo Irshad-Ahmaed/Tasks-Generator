@@ -2,6 +2,9 @@ import Link from "next/link";
 import { FeatureForm } from "@/components/FeatureForm";
 import { db } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function HomePage() {
   let specs: Array<{ id: string; title: string; templateType: string; createdAt: Date }> = [];
   let dbWarning: string | null = null;
