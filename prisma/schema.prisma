@@ -53,6 +53,11 @@ model GenerationHistory {
   model        String
   latencyMs    Int
   success      Boolean
+  usedFallback Boolean  @default(false)
+  promptTokens Int?
+  completionTokens Int?
+  totalTokens  Int?
+  estimatedCostUsd Float?
   errorMessage String?
   createdAt    DateTime @default(now())
   spec         Spec     @relation(fields: [specId], references: [id], onDelete: Cascade)

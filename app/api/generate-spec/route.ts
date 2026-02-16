@@ -16,7 +16,6 @@ export async function POST(request: NextRequest) {
   }
 
   const input = parsed.data;
-  const model = process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
   const startedAt = Date.now();
 
   try {
@@ -73,10 +72,15 @@ export async function POST(request: NextRequest) {
     await db.generationHistory.create({
       data: {
         specId: created.id,
-        model,
+        model: generated.meta.model,
         // Save response time so we can check slow requests later.
         latencyMs: Date.now() - startedAt,
-        success: true
+        success: true,
+        usedFallback: generated.meta.usedFallback,
+        promptTokens: generated.meta.usage.promptTokens,
+        completionTokens: generated.meta.usage.completionTokens,
+        totalTokens: generated.meta.usage.totalTokens,
+        estimatedCostUsd: generated.meta.estimatedCostUsd
       }
     });
 

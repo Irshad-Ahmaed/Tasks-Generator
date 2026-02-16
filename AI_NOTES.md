@@ -12,6 +12,7 @@
 - Input validation rules and empty/wrong input handling.
 - Status page behavior for backend, database, and LLM checks.
 - Drag-and-drop reordering behavior and export button loading states.
+- Generation telemetry persistence (`usedFallback`, token usage, estimated cost) in `GenerationHistory`.
 
 ## LLM provider and model choice
 - Provider: Google Gemini API
@@ -20,3 +21,4 @@
 Reason:
 - Good quality-speed-cost balance for short structured planning outputs.
 - Reliable JSON generation when combined with schema-constrained prompting.
+- Cost predictability improved with bounded generation settings and server-side usage tracking.

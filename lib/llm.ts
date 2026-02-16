@@ -9,6 +9,23 @@ type GenerateInput = {
   riskUnknowns?: string;
 };
 
+type LlmUsage = {
+  promptTokens: number | null;
+  completionTokens: number | null;
+  totalTokens: number | null;
+};
+
+type GenerationMeta = {
+  model: string;
+  usedFallback: boolean;
+  usage: LlmUsage;
+  estimatedCostUsd: number | null;
+};
+
+export type GenerationResult = GeneratedPayload & {
+  meta: GenerationMeta;
+};
+
 const generationSchema = {
   type: "object",
   additionalProperties: false,
@@ -70,7 +87,7 @@ async function callChatCompletions(args: {
   apiKey: string;
   model: string;
   messages: Array<{ role: "system" | "user"; content: string }>;
-}): Promise<string> {
+}): Promise<{ content: string; usage: LlmUsage }> {
   const response = await fetch(`${getBaseUrl()}chat/completions`, {
     method: "POST",
     headers: {
@@ -79,7 +96,9 @@ async function callChatCompletions(args: {
     },
     body: JSON.stringify({
       model: args.model,
-      messages: args.messages
+      messages: args.messages,
+      temperature: 0.2,
+      max_tokens: 1800
     })
   });
 
@@ -90,13 +109,45 @@ async function callChatCompletions(args: {
 
   const data = (await response.json()) as {
     choices?: Array<{ message?: { content?: string } }>;
+    usage?: {
+      prompt_tokens?: number;
+      completion_tokens?: number;
+      total_tokens?: number;
+    };
   };
   const content = data.choices?.[0]?.message?.content?.trim();
   if (!content) {
     throw new Error("LLM returned an empty message.");
   }
 
-  return content;
+  return {
+    content,
+    usage: {
+      promptTokens: data.usage?.prompt_tokens ?? null,
+      completionTokens: data.usage?.completion_tokens ?? null,
+      totalTokens: data.usage?.total_tokens ?? null
+    }
+  };
+}
+
+function estimateCostUsd(model: string, usage: LlmUsage): number | null {
+  if (usage.promptTokens === null && usage.completionTokens === null) {
+    return null;
+  }
+
+  // Approximate default pricing for Gemini 2.5 Flash Lite in USD per 1M tokens.
+  // Override via env for provider/model changes.
+  const defaultInputPerMillion = model.includes("flash-lite") ? 0.1 : 0.3;
+  const defaultOutputPerMillion = model.includes("flash-lite") ? 0.4 : 1;
+
+  const inputPerMillion = Number(process.env.GEMINI_INPUT_USD_PER_MILLION || defaultInputPerMillion);
+  const outputPerMillion = Number(process.env.GEMINI_OUTPUT_USD_PER_MILLION || defaultOutputPerMillion);
+
+  const inputTokens = usage.promptTokens ?? 0;
+  const outputTokens = usage.completionTokens ?? 0;
+  const cost = (inputTokens / 1_000_000) * inputPerMillion + (outputTokens / 1_000_000) * outputPerMillion;
+
+  return Number(cost.toFixed(8));
 }
 
 function extractJsonObject(raw: string): string {
@@ -208,12 +259,20 @@ function buildFallback(input: GenerateInput): GeneratedPayload {
   };
 }
 
-export async function generateSpecFromLLM(input: GenerateInput): Promise<GeneratedPayload> {
+export async function generateSpecFromLLM(input: GenerateInput): Promise<GenerationResult> {
   const apiKey = process.env.GEMINI_API_KEY;
   const model = process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
 
   if (!apiKey) {
-    return buildFallback(input);
+    return {
+      ...buildFallback(input),
+      meta: {
+        model,
+        usedFallback: true,
+        usage: { promptTokens: null, completionTokens: null, totalTokens: null },
+        estimatedCostUsd: null
+      }
+    };
   }
 
   const prompt = [
@@ -226,7 +285,7 @@ export async function generateSpecFromLLM(input: GenerateInput): Promise<Generat
   ].join("\n");
 
   try {
-    const raw = await callChatCompletions({
+    const llmResponse = await callChatCompletions({
       apiKey,
       model,
       messages: [
@@ -249,24 +308,49 @@ export async function generateSpecFromLLM(input: GenerateInput): Promise<Generat
       ]
     });
 
-    const parsed = JSON.parse(extractJsonObject(raw)) as {
+    const parsed = JSON.parse(extractJsonObject(llmResponse.content)) as {
       userStories: StoryDraft[];
       tasks: TaskDraft[];
     };
     const normalized = normalize(parsed, input);
+    const estimatedCostUsd = estimateCostUsd(model, llmResponse.usage);
 
     // Guarantee minimum data even if model barely satisfies schema.
     if (normalized.userStories.length < 4 || normalized.tasks.length < 8) {
-      return buildFallback(input);
+      return {
+        ...buildFallback(input),
+        meta: {
+          model,
+          usedFallback: true,
+          usage: llmResponse.usage,
+          estimatedCostUsd
+        }
+      };
     }
 
-    return normalized;
+    return {
+      ...normalized,
+      meta: {
+        model,
+        usedFallback: false,
+        usage: llmResponse.usage,
+        estimatedCostUsd
+      }
+    };
   } catch (error) {
     if (process.env.NODE_ENV !== "production") {
       const message = error instanceof Error ? error.message : String(error);
       console.warn(`LLM generation failed, using fallback tasks: ${message}`);
     }
-    return buildFallback(input);
+    return {
+      ...buildFallback(input),
+      meta: {
+        model,
+        usedFallback: true,
+        usage: { promptTokens: null, completionTokens: null, totalTokens: null },
+        estimatedCostUsd: null
+      }
+    };
   }
 }
 
